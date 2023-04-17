@@ -21,6 +21,8 @@ databaseCursor.execute('''Create TABLE IF NOT EXISTS movies (
                             m_movieId INTEGER PRIMARY KEY ASC,
                             m_title TEXT,
                             m_director TEXT,
+                            m_starring TEXT,
+                            m_critics TEXT,
                             m_genre TEXT,
                             m_year INTEGER)''')
 database.commit()
@@ -64,6 +66,7 @@ def dbEmpty():
 ###   Account-related functions   ###
 #####################################
 
+
 def uniqueUsername(username):
     lookup = databaseCursor.execute("SELECT COUNT(*) FROM users where u_username IS ?", (username,))
     return lookup.fetchone()[0] == 0
@@ -91,6 +94,7 @@ def checkExistingAccts(username, password):
     else:
         return -1
 
+
 def checkisEmployee(username, password):
     databaseCursor.execute("SELECT * FROM users WHERE u_username= ? and u_password= ?",
         (username, password))
@@ -100,6 +104,7 @@ def checkisEmployee(username, password):
         return found[0]
     else:
         return -1     
+
 
 def checkExistingUsername(username):
     databaseCursor.execute("SELECT * FROM users WHERE u_username= ?",
@@ -111,4 +116,31 @@ def checkExistingUsername(username):
         return -1
     
 
+#####################################
+###    Movie-related functions    ###
+#####################################
 
+
+def initMovies(title, director, starring, critics, genre, year):
+    databaseCursor.execute("""
+                    INSERT INTO movies (m_title, m_director, m_starring, m_critics, m_genre, m_year) VALUES
+                        (?, ?, ?, ?, ?, ?)
+                    """, (title, director, starring, critics, genre, year))
+
+    newId = databaseCursor.lastrowid
+
+    database.commit()
+
+    return newId
+
+def addMovie(title, director, starring, critics, genre, year):
+    databaseCursor.execute("""
+                    INSERT INTO movies (m_title, m_director, m_starring, m_critics, m_genre, m_year) VALUES
+                        (?, ?, ?, ?, ?, ?)
+                    """, (title, director, starring, critics, genre, year))
+    database.commit()
+
+
+def uniqueMovieTitle(title):
+    lookup = databaseCursor.execute("SELECT COUNT(*) FROM movies where m_title IS ?", (title,))
+    return lookup.fetchone()[0] == 0

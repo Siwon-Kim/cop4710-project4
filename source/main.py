@@ -2,7 +2,6 @@ from commons import *
 from database import *
 from movies import *
 from authentication import *
-from account import *
 from api import *
 
 
@@ -176,19 +175,38 @@ def movieListInterface(asId):
     pass
 
 def addMovieInterface(asId):
-    pass
+    title = gatherInput(
+                "Enter a movie title: ",
+                "Movie already exists on database.",
+                uniqueMovieTitle)
+    director = gatherInput("\nEnter the director:\n", "", vacuouslyTrue)
+    starring = gatherInput("\nEnter the starring: \n", "", vacuouslyTrue)
+    critics = gatherInput("\nEnter the critics: \n", "", vacuouslyTrue)
+    genre = gatherInput("\nEnter the genre: \n", "", vacuouslyTrue)
+    year = gatherInput("\nEnter the year: \n", "", vacuouslyTrue)
 
-def searchMovieInterface(asId):
-    pass
+    addMovie(title, director, starring, critics, genre, year)
 
-def watchedMovieInterface(asId):
-    pass
+    clear()
+
+    return employeeMainInterface, (asId,)
+
 
 def editMovieInterface(asId):
     pass
 
+
 def deleteMovieInterface(asId):
     pass
+
+
+def searchMovieInterface(asId):
+    pass
+
+
+def watchedMovieInterface(asId):
+    pass
+
 
 def manageCustomerInterface(asId):
     pass
@@ -216,4 +234,6 @@ def stateLoop(state):
 
 if (__name__ == "__main__"):
     employeeListAPI()
+    movieListAPI()
+
     stateLoop(applicationEntry)
