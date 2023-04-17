@@ -1,7 +1,9 @@
 import os
 from functools import lru_cache
 
+
 clear = lambda: os.system('cls') 
+
 
 def enterToContinue():
     input("\nPress ENTER to continue.\n")
@@ -21,22 +23,8 @@ def numberValidator(number):
         return False
 
 
-def passwordValidator(password):
-    c, d, s = 0, 0, 0
-    length = len(password)
-    if length > 7 and length < 13:
-        for i in password:
-            if i.isupper():
-                c += 1
-            if i.isdigit():
-                d += 1
-            if i=='!' or i=='@' or i=='#' or i=='$' or i=='%' or i=='^' or i=='&' or i=='*':
-                s += 1
-
-    if c > 0 and d > 0 and s > 0:
-        return True
-    else:
-        return False
+def vacuouslyTrue(string):
+    return True
 
 
 #####################################

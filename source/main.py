@@ -3,6 +3,7 @@ from database import *
 from movies import *
 from authentication import *
 from account import *
+from api import *
 
 
 def applicationEntry():
@@ -34,7 +35,6 @@ def applicationEntry():
 
 
 def employeeMainInterface(asId):
-#   usersAPI()
     prompt = "Please select an option below:\n"\
             "\t1. View movie list\n"\
             "\t2. Add movie to database \n"\
@@ -50,23 +50,23 @@ def employeeMainInterface(asId):
     
     if sel == 1:
         clear()
-        return jobInterface, (asId,)
+        return movieListInterface, (asId,)
 
     elif sel == 2:
         clear()
-        return findFriendsbyType, (asId,)
+        return addMovieInterface, (asId,)
 
     elif sel == 3:
         clear()
-        return friendsList, (asId,)
+        return editMovieInterface, (asId,)
 
     elif sel == 4:
         clear()
-        return listSkills, (asId,)
+        return deleteMovieInterface, (asId,)
 
     elif sel == 5:
         clear()
-        return inCollegeGroups, (asId,)
+        return manageCustomerInterface, (asId,)
         
     elif sel == 6:
         clear()
@@ -74,19 +74,16 @@ def employeeMainInterface(asId):
 
     elif sel == 7:
         clear()
-        return messagesInterface, (asId,)
+        return applicationEntry, None
 
 
 def customerMainInterface(asId):
-#   usersAPI()
     prompt = "Please select an option below:\n"\
             "\t1. View all movies\n"\
-            "\t2. View movies available on theater\n"\
-            "\t3. Search movies\n"\
-            "\t4. View your watched movie list\n"\
-            "\t5. View your saved movie list\n"\
-            "\t6. My profile\n"\
-            "\t7. Log out\n"\
+            "\t2. Search movies\n"\
+            "\t3. View your watched movie list\n"\
+            "\t4. My profile\n"\
+            "\t5. Log out\n"\
             "Selection: "
     sel = int(
             gatherInput(prompt, "Invalid input. Please try again.\n",
@@ -94,31 +91,107 @@ def customerMainInterface(asId):
 
     if sel == 1:
         clear()
-        return jobInterface, (asId,)
+        return movieListInterface, (asId,)
 
     elif sel == 2:
         clear()
-        return findFriendsbyType, (asId,)
+        return searchMovieInterface, (asId,)
 
     elif sel == 3:
         clear()
-        return friendsList, (asId,)
+        return watchedMovieInterface, (asId,)
 
     elif sel == 4:
         clear()
-        return listSkills, (asId,)
+        return myProfile, (asId,)
 
     elif sel == 5:
         clear()
-        return inCollegeGroups, (asId,)
-        
-    elif sel == 6:
-        clear()
-        return myProfile, (asId,)
+        return applicationEntry, None
 
-    elif sel == 7:
-        clear()
-        return messagesInterface, (asId,)
+
+#####################################
+###   Account-related functions   ###
+#####################################
+
+def login():
+    if dbEmpty():
+        print("\n\nNo existing accounts. Please create a new account.\n")
+        return applicationEntry, None
+
+    else:
+        username = input("Username: ")
+        password = input("Password: ")
+    
+        id = checkExistingAccts(username, password)
+
+        if id != -1 and checkisEmployee:
+            clear()
+            print("\n\nYou have successfully logged in as an employee\n")
+            return employeeMainInterface, (id,)
+        
+        if id != -1:
+            clear()
+            print("\n\nYou have successfully logged in as a client\n")
+            return customerMainInterface, (id,)
+
+        else:
+            clear()
+            print("\n\nIncorrect username/password. Please try again.\n")
+            return applicationEntry, None
+    
+
+def newAcct():
+    username = gatherInput(
+                "Enter a username: ",
+                "Username already exists. Please try again.",
+                uniqueUsername)
+
+    password = gatherInput(
+                "\nPassword must meet the following requirements:\n"\
+                "\t-Length of 8-12 characters\n"\
+                "\t-Contain one capital letter\n"\
+                "\t-Contain one digit\n"\
+                "\t-Contain one of the following special characters: !, @, #, $, %, ^, &, *\n"\
+                "\nPassword: ",
+                "Password does not meet security requirements",
+                passwordValidator)
+
+    firstname = gatherInput("\nEnter your first name:\n", "", vacuouslyTrue)
+    lastname = gatherInput("\nEnter your last name: \n", "", vacuouslyTrue)
+    email = gatherInput("\nEnter your email: \n", "", vacuouslyTrue)
+
+    clear()
+    return customerMainInterface, (initAcct(username, password, firstname, lastname, email, 0),)
+
+def myProfile(asId):
+    pass
+
+
+#####################################
+###   Movie-related functions   ###
+#####################################
+
+def movieListInterface(asId):
+    pass
+
+def addMovieInterface(asId):
+    pass
+
+def searchMovieInterface(asId):
+    pass
+
+def watchedMovieInterface(asId):
+    pass
+
+def editMovieInterface(asId):
+    pass
+
+def deleteMovieInterface(asId):
+    pass
+
+def manageCustomerInterface(asId):
+    pass
 
 
 
@@ -142,4 +215,5 @@ def stateLoop(state):
 
 
 if (__name__ == "__main__"):
+    employeeListAPI()
     stateLoop(applicationEntry)
