@@ -21,6 +21,8 @@ databaseCursor.execute('''Create TABLE IF NOT EXISTS movies (
                             m_movieId INTEGER PRIMARY KEY ASC,
                             m_title TEXT,
                             m_director TEXT,
+                            m_starring TEXT,
+                            m_critics TEXT,
                             m_genre TEXT,
                             m_year INTEGER)''')
 database.commit()
@@ -53,7 +55,7 @@ movieCount = tableEntriesCount("movies")
 
 
 def dbEmpty():
-    if (userCount() == 0):
-        return True
-    else:
-        return False
+	if (userCount() == 0):
+		return True
+	else:
+		return False

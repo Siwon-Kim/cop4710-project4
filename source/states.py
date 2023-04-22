@@ -1,8 +1,8 @@
 from commons import *
 from database import *
+from account import *
 from movies import *
 from authentication import *
-from account import *
 from api import *
 
 
@@ -178,6 +178,29 @@ def movieListInterface(asId):
 
 
 def addMovieInterface(asId):
+    title = gatherInput(
+                "Enter a movie title: ",
+                "Movie already exists on database.",
+                uniqueMovieTitle)
+    director = gatherInput("\nEnter the director:\n", "", vacuouslyTrue)
+    starring = gatherInput("\nEnter the starring: \n", "", vacuouslyTrue)
+    critics = gatherInput("\nEnter the critics: \n", "", vacuouslyTrue)
+    genre = gatherInput("\nEnter the genre: \n", "", vacuouslyTrue)
+    year = gatherInput("\nEnter the year: \n", "", vacuouslyTrue)
+
+    addMovie(title, director, starring, critics, genre, year)
+
+    clear()
+
+    return employeeMainInterface, (asId,)
+
+
+
+def editMovieInterface(asId):
+    pass
+
+
+def deleteMovieInterface(asId):
     pass
 
 
@@ -186,14 +209,6 @@ def searchMovieInterface(asId):
 
 
 def watchedMovieInterface(asId):
-    pass
-
-
-def editMovieInterface(asId):
-    pass
-
-
-def deleteMovieInterface(asId):
     pass
 
 
