@@ -45,7 +45,7 @@ def applicationEntry():
 
 
 def employeeMainInterface(asId):
-    prompt = "Please select an option below:\n"\
+    prompt = "\nPlease select an option below:\n"\
         "\t1. View movie list\n"\
         "\t2. Add movie to database \n"\
         "\t3. Edit movies\n"\
@@ -59,7 +59,7 @@ def employeeMainInterface(asId):
 
     if sel == 1:
         clear()
-        return movieListInterface, (asId,)
+        return movieListInterface, (asId, True)
 
     elif sel == 2:
         clear()
@@ -83,7 +83,7 @@ def employeeMainInterface(asId):
 
 
 def customerMainInterface(asId):
-    prompt = "Please select an option below:\n"\
+    prompt = "\nPlease select an option below:\n"\
         "\t1. View all movies\n"\
         "\t2. Search movies\n"\
         "\t3. View your watched movie list\n"\
@@ -96,7 +96,7 @@ def customerMainInterface(asId):
 
     if sel == 1:
         clear()
-        return movieListInterface, (asId,)
+        return movieListInterface, (asId, False)
 
     elif sel == 2:
         clear()
@@ -180,9 +180,28 @@ def myProfile(asId):
 #####################################
 
 
-def movieListInterface(asId):
-    pass
+def movieListInterface(asId, isEmployee):
+    connection = sqlite3.connect("MoviesCGV.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM movies;")
 
+    for row in cursor:
+        print("------------------------------")
+        print("Title:", row[1])
+        print("Director:", row[2])
+        print("Starring:", row[3])
+        print("Critics:", row[4])
+        print("Genre:", row[5])
+        print("Year:", row[6])
+        print("------------------------------")
+    
+    connection.close()
+    
+    if isEmployee:
+        return employeeMainInterface, (asId,)
+    else:
+        return customerMainInterface, (asId,)
+        
 
 def addMovieInterface(asId):
     title = gatherInput(
