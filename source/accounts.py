@@ -1,9 +1,13 @@
-from commons import *
+from source.commons import *
 
 import sqlite3
 
 database = sqlite3.connect("moviesCGV.db")
 databaseCursor = database.cursor()
+
+def clearUsers():
+	databaseCursor.execute('DELETE FROM users')
+	database.commit()
 
 def uniqueUsername(username):
     lookup = databaseCursor.execute(

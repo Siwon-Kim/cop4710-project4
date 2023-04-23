@@ -1,5 +1,5 @@
-from commons import *
-from database import *
+from source.commons import *
+from source.database import *
 
 
 def passwordValidator(password):

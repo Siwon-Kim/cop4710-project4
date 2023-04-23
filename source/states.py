@@ -1,9 +1,14 @@
-from commons import *
-from database import *
-from account import *
-from movies import *
-from authentication import *
-from api import *
+from source.commons import *
+from source.database import *
+from source.accounts import *
+from source.movies import *
+from source.authentication import *
+from source.api import *
+
+
+#####################################
+###          Main States          ###
+#####################################
 
 
 def applicationEntry():
@@ -40,9 +45,8 @@ def employeeMainInterface(asId):
         "\t2. Add movie to database \n"\
         "\t3. Edit movies\n"\
         "\t4. Delete movies\n"\
-        "\t5. Manage customer information\n"\
-        "\t6. My profile\n"\
-        "\t7. Log out\n"\
+        "\t5. My profile\n"\
+        "\t6. Log out\n"\
         "Selection: "
     sel = int(
         gatherInput(prompt, "Invalid input. Please try again.\n",
@@ -66,13 +70,9 @@ def employeeMainInterface(asId):
 
     elif sel == 5:
         clear()
-        return manageCustomerInterface, (asId,)
-
-    elif sel == 6:
-        clear()
         return myProfile, (asId,)
 
-    elif sel == 7:
+    elif sel == 6:
         clear()
         return applicationEntry, None
 
@@ -111,8 +111,9 @@ def customerMainInterface(asId):
 
 
 #####################################
-###   Account-related functions   ###
+###    Account-related States     ###
 #####################################
+
 
 def login():
     if dbEmpty():
@@ -170,8 +171,9 @@ def myProfile(asId):
 
 
 #####################################
-###   Movie-related functions   ###
+###      Movie-related States     ###
 #####################################
+
 
 def movieListInterface(asId):
     pass
@@ -181,27 +183,44 @@ def addMovieInterface(asId):
     title = gatherInput(
                 "Enter a movie title: ",
                 "Movie already exists on database.",
-                uniqueMovieTitle)
+                uniqueMovieTitle).lower()
     director = gatherInput("\nEnter the director:\n", "", vacuouslyTrue)
     starring = gatherInput("\nEnter the starring: \n", "", vacuouslyTrue)
     critics = gatherInput("\nEnter the critics: \n", "", vacuouslyTrue)
-    genre = gatherInput("\nEnter the genre: \n", "", vacuouslyTrue)
+    genre = gatherInput("\nEnter the genre: \n", "", vacuouslyTrue).lower()
     year = gatherInput("\nEnter the year: \n", "", vacuouslyTrue)
 
     addMovie(title, director, starring, critics, genre, year)
 
     clear()
+    print("The movie is successfully added\n")
 
     return employeeMainInterface, (asId,)
 
 
 
 def editMovieInterface(asId):
-    pass
+    movieId = gatherInput("\nEnter the movie ID you want to edit:\n", "", vacuouslyTrue)
+    critics = gatherInput("\nEnter the critics: \n", "", vacuouslyTrue)
+
+    editMovieCritics(movieId, critics)
+
+    clear()
+    print("The critics is successfully edited\n")
+
+    return employeeMainInterface, (asId,)
+
 
 
 def deleteMovieInterface(asId):
-    pass
+    movieId = gatherInput("\nEnter the movie ID you want to delete:\n", "", vacuouslyTrue)
+
+    deleteMovie(movieId)
+
+    clear()
+    print("The movie is successfully deleted\n")
+
+    return employeeMainInterface, (asId,)
 
 
 def searchMovieInterface(asId):
@@ -212,8 +231,9 @@ def watchedMovieInterface(asId):
     pass
 
 
-def manageCustomerInterface(asId):
-    pass
+#####################################
+###          Other States         ###
+#####################################
 
 
 def exitState(asId):
