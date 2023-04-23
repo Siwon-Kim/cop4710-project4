@@ -279,6 +279,7 @@ def searchTitle(asId):
     connection = sqlite3.connect("MoviesCGV.db")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM movies WHERE m_title=?", (title, ))
+    search_result = 0
 
     for row in cursor:
         print("------------------------------")
@@ -289,8 +290,12 @@ def searchTitle(asId):
         print("Genre:", row[5])
         print("Year:", row[6])
         print("------------------------------")
+        search_result += 1
     
     connection.close()
+
+    if search_result == 0:
+        print("No matching movies found.")
 
     return customerMainInterface, (id,)
 
@@ -300,6 +305,7 @@ def searchDirector(asId):
     connection = sqlite3.connect("MoviesCGV.db")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM movies WHERE m_director=?", (director, ))
+    search_result = 0
 
     for row in cursor:
         print("------------------------------")
@@ -310,8 +316,12 @@ def searchDirector(asId):
         print("Genre:", row[5])
         print("Year:", row[6])
         print("------------------------------")
+        search_result += 1
     
     connection.close()
+
+    if search_result == 0:
+        print("No matching movies found.")
 
     return customerMainInterface, (id,)
 
@@ -321,6 +331,7 @@ def searchGenre(asId):
     connection = sqlite3.connect("MoviesCGV.db")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM movies WHERE m_genre=?", (genre, ))
+    search_result = 0
 
     for row in cursor:
         print("------------------------------")
@@ -331,8 +342,12 @@ def searchGenre(asId):
         print("Genre:", row[5])
         print("Year:", row[6])
         print("------------------------------")
+        search_result += 1
     
     connection.close()
+
+    if search_result == 0:
+        print("No matching movies found.")
 
     return customerMainInterface, (id,)
 
@@ -342,6 +357,7 @@ def searchYear(asId):
     connection = sqlite3.connect("MoviesCGV.db")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM movies WHERE m_year=?", (year, ))
+    search_result = 0
 
     for row in cursor:
         print("------------------------------")
@@ -352,8 +368,12 @@ def searchYear(asId):
         print("Genre:", row[5])
         print("Year:", row[6])
         print("------------------------------")
+        search_result += 1
     
     connection.close()
+
+    if search_result == 0:
+        print("No matching movies found.")
 
     return customerMainInterface, (id,)
 
