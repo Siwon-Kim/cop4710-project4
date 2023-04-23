@@ -26,9 +26,10 @@ def applicationEntry():
     prompt = "Please select an option below:\n"\
         "\t1. Log in to an existing account\n"\
         "\t2. Create a new account\n"\
+        "\t3. Exit\n"\
         "Selection: "
     sel = int(gatherInput(prompt, "Invalid input. Please try again.\n",
-                            menuValidatorBuilder('12')))
+                            menuValidatorBuilder('123')))
 
     if sel == 1:
         clear()
@@ -37,6 +38,10 @@ def applicationEntry():
     elif sel == 2:
         clear()
         return newAcct, None
+
+    elif sel == 3:
+        clear()
+        exit()
 
 
 def employeeMainInterface(asId):
@@ -124,9 +129,9 @@ def login():
         username = input("Username: ")
         password = input("Password: ")
 
-        id = checkExistingAccts(username, password)
+        id, isEmployee = checkExistingAccts(username, password)
 
-        if id != -1 and checkisEmployee:
+        if id != -1 and isEmployee:
             clear()
             print("\n\nYou have successfully logged in as an employee\n")
             return employeeMainInterface, (id,)
