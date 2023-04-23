@@ -1,5 +1,6 @@
-from commons import *
-from database import *
+from source.commons import *
+from source.database import *
+
 
 def passwordValidator(password):
     c, d, s = 0, 0, 0
@@ -10,7 +11,7 @@ def passwordValidator(password):
                 c += 1
             if i.isdigit():
                 d += 1
-            if i=='!' or i=='@' or i=='#' or i=='$' or i=='%' or i=='^' or i=='&' or i=='*':
+            if i == '!' or i == '@' or i == '#' or i == '$' or i == '%' or i == '^' or i == '&' or i == '*':
                 s += 1
 
     if c > 0 and d > 0 and s > 0:

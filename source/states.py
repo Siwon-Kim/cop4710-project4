@@ -1,8 +1,14 @@
-from commons import *
-from database import *
-from movies import *
-from authentication import *
-from api import *
+from source.commons import *
+from source.database import *
+from source.accounts import *
+from source.movies import *
+from source.authentication import *
+from source.api import *
+
+
+#####################################
+###          Main States          ###
+#####################################
 
 
 def applicationEntry():
@@ -18,12 +24,12 @@ def applicationEntry():
     print(welcomeMessage)
 
     prompt = "Please select an option below:\n"\
-            "\t1. Log in to an existing account\n"\
-            "\t2. Create a new account\n"\
-            "Selection: "
+        "\t1. Log in to an existing account\n"\
+        "\t2. Create a new account\n"\
+        "Selection: "
     sel = int(gatherInput(prompt, "Invalid input. Please try again.\n",
-                    menuValidatorBuilder('12')))
-    
+                            menuValidatorBuilder('12')))
+
     if sel == 1:
         clear()
         return login, None
@@ -35,18 +41,17 @@ def applicationEntry():
 
 def employeeMainInterface(asId):
     prompt = "Please select an option below:\n"\
-            "\t1. View movie list\n"\
-            "\t2. Add movie to database \n"\
-            "\t3. Edit movies\n"\
-            "\t4. Delete movies\n"\
-            "\t5. Manage customer information\n"\
-            "\t6. My profile\n"\
-            "\t7. Log out\n"\
-            "Selection: "
+        "\t1. View movie list\n"\
+        "\t2. Add movie to database \n"\
+        "\t3. Edit movies\n"\
+        "\t4. Delete movies\n"\
+        "\t5. My profile\n"\
+        "\t6. Log out\n"\
+        "Selection: "
     sel = int(
-            gatherInput(prompt, "Invalid input. Please try again.\n",
-                        menuValidatorBuilder('1234567')))
-    
+        gatherInput(prompt, "Invalid input. Please try again.\n",
+                    menuValidatorBuilder('1234567')))
+
     if sel == 1:
         clear()
         return movieListInterface, (asId,)
@@ -65,28 +70,24 @@ def employeeMainInterface(asId):
 
     elif sel == 5:
         clear()
-        return manageCustomerInterface, (asId,)
-        
-    elif sel == 6:
-        clear()
         return myProfile, (asId,)
 
-    elif sel == 7:
+    elif sel == 6:
         clear()
         return applicationEntry, None
 
 
 def customerMainInterface(asId):
     prompt = "Please select an option below:\n"\
-            "\t1. View all movies\n"\
-            "\t2. Search movies\n"\
-            "\t3. View your watched movie list\n"\
-            "\t4. My profile\n"\
-            "\t5. Log out\n"\
-            "Selection: "
+        "\t1. View all movies\n"\
+        "\t2. Search movies\n"\
+        "\t3. View your watched movie list\n"\
+        "\t4. My profile\n"\
+        "\t5. Log out\n"\
+        "Selection: "
     sel = int(
-            gatherInput(prompt, "Invalid input. Please try again.\n",
-                        menuValidatorBuilder('1234567')))
+        gatherInput(prompt, "Invalid input. Please try again.\n",
+                    menuValidatorBuilder('1234567')))
 
     if sel == 1:
         clear()
@@ -110,8 +111,9 @@ def customerMainInterface(asId):
 
 
 #####################################
-###   Account-related functions   ###
+###    Account-related States     ###
 #####################################
+
 
 def login():
     if dbEmpty():
@@ -121,14 +123,14 @@ def login():
     else:
         username = input("Username: ")
         password = input("Password: ")
-    
+
         id = checkExistingAccts(username, password)
 
         if id != -1 and checkisEmployee:
             clear()
             print("\n\nYou have successfully logged in as an employee\n")
             return employeeMainInterface, (id,)
-        
+
         if id != -1:
             clear()
             print("\n\nYou have successfully logged in as a client\n")
@@ -138,23 +140,23 @@ def login():
             clear()
             print("\n\nIncorrect username/password. Please try again.\n")
             return applicationEntry, None
-    
+
 
 def newAcct():
     username = gatherInput(
-                "Enter a username: ",
-                "Username already exists. Please try again.",
-                uniqueUsername)
+        "Enter a username: ",
+        "Username already exists. Please try again.",
+        uniqueUsername)
 
     password = gatherInput(
-                "\nPassword must meet the following requirements:\n"\
-                "\t-Length of 8-12 characters\n"\
-                "\t-Contain one capital letter\n"\
-                "\t-Contain one digit\n"\
-                "\t-Contain one of the following special characters: !, @, #, $, %, ^, &, *\n"\
-                "\nPassword: ",
-                "Password does not meet security requirements",
-                passwordValidator)
+        "\nPassword must meet the following requirements:\n"
+        "\t-Length of 8-12 characters\n"
+        "\t-Contain one capital letter\n"
+        "\t-Contain one digit\n"
+        "\t-Contain one of the following special characters: !, @, #, $, %, ^, &, *\n"
+        "\nPassword: ",
+        "Password does not meet security requirements",
+        passwordValidator)
 
     firstname = gatherInput("\nEnter your first name:\n", "", vacuouslyTrue)
     lastname = gatherInput("\nEnter your last name: \n", "", vacuouslyTrue)
@@ -163,41 +165,62 @@ def newAcct():
     clear()
     return customerMainInterface, (initAcct(username, password, firstname, lastname, email, 0),)
 
+
 def myProfile(asId):
     pass
 
 
 #####################################
-###   Movie-related functions   ###
+###      Movie-related States     ###
 #####################################
+
 
 def movieListInterface(asId):
     pass
+
 
 def addMovieInterface(asId):
     title = gatherInput(
                 "Enter a movie title: ",
                 "Movie already exists on database.",
-                uniqueMovieTitle)
+                uniqueMovieTitle).lower()
     director = gatherInput("\nEnter the director:\n", "", vacuouslyTrue)
     starring = gatherInput("\nEnter the starring: \n", "", vacuouslyTrue)
     critics = gatherInput("\nEnter the critics: \n", "", vacuouslyTrue)
-    genre = gatherInput("\nEnter the genre: \n", "", vacuouslyTrue)
+    genre = gatherInput("\nEnter the genre: \n", "", vacuouslyTrue).lower()
     year = gatherInput("\nEnter the year: \n", "", vacuouslyTrue)
 
     addMovie(title, director, starring, critics, genre, year)
 
     clear()
+    print("The movie is successfully added\n")
 
     return employeeMainInterface, (asId,)
 
 
+
 def editMovieInterface(asId):
-    pass
+    movieId = gatherInput("\nEnter the movie ID you want to edit:\n", "", vacuouslyTrue)
+    critics = gatherInput("\nEnter the critics: \n", "", vacuouslyTrue)
+
+    editMovieCritics(movieId, critics)
+
+    clear()
+    print("The critics is successfully edited\n")
+
+    return employeeMainInterface, (asId,)
+
 
 
 def deleteMovieInterface(asId):
-    pass
+    movieId = gatherInput("\nEnter the movie ID you want to delete:\n", "", vacuouslyTrue)
+
+    deleteMovie(movieId)
+
+    clear()
+    print("The movie is successfully deleted\n")
+
+    return employeeMainInterface, (asId,)
 
 
 def searchMovieInterface(asId):
@@ -208,13 +231,9 @@ def watchedMovieInterface(asId):
     pass
 
 
-def manageCustomerInterface(asId):
-    pass
-
-
-
-
-
+#####################################
+###          Other States         ###
+#####################################
 
 
 def exitState(asId):
@@ -233,7 +252,4 @@ def stateLoop(state):
 
 
 if (__name__ == "__main__"):
-    employeeListAPI()
-    movieListAPI()
-
     stateLoop(applicationEntry)

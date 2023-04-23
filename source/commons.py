@@ -2,7 +2,7 @@ import os
 from functools import lru_cache
 
 
-clear = lambda: os.system('cls') 
+def clear(): return os.system('cls')
 
 
 def enterToContinue():
@@ -47,7 +47,7 @@ def menuValidatorBuilder(validOptions):
 def rangedMenuValidatorBuilder(start, end):
     '''
     Generates a validator from a range of acceptable integer options
-    
+
     :param start: Begining of acceptable range (inclusive)
     :param end: End of acceptable range (inclusive)
     :returns a function f(x) that returns if x is in the range of start to end (inclusive)
@@ -78,7 +78,7 @@ def optionsOrEnterBuilder(options):
     :return a function f(x) that returns if x is in option or is nothing
     '''
 
-    options.append('') 
+    options.append('')
 
     return lambda textInput: (textInput.strip() in options)
 
@@ -103,6 +103,3 @@ def gatherInput(prompt, failResponse, validator):
             userInput = input(prompt)
         else:
             return userInput
-        
-
-
