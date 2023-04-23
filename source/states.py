@@ -248,7 +248,114 @@ def deleteMovieInterface(asId):
 
 
 def searchMovieInterface(asId):
-    pass
+    prompt = "\nPlease select an option below:\n"\
+        "\t1. Search by Title\n"\
+        "\t2. Search by Director\n"\
+        "\t3. Search by Genre\n"\
+        "\t4. Search by Year\n"\
+        "Selection: "
+    sel = int(gatherInput(prompt, "Invalid input. Please try again.\n",
+                            menuValidatorBuilder('1234')))
+
+    if sel == 1:
+        clear()
+        return searchTitle, (asId,)
+
+    elif sel == 2:
+        clear()
+        return searchDirector, (asId,)
+    
+    elif sel == 3:
+        clear()
+        return searchGenre, (asId,)
+    
+    elif sel == 4:
+        clear()
+        return searchYear, (asId,)
+
+
+def searchTitle(asId):
+    title = gatherInput("\nEnter the title: ", "", vacuouslyTrue).lower()
+    connection = sqlite3.connect("MoviesCGV.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM movies WHERE m_title=?", (title, ))
+
+    for row in cursor:
+        print("------------------------------")
+        print("Title:", row[1])
+        print("Director:", row[2])
+        print("Starring:", row[3])
+        print("Critics:", row[4])
+        print("Genre:", row[5])
+        print("Year:", row[6])
+        print("------------------------------")
+    
+    connection.close()
+
+    return customerMainInterface, (id,)
+
+
+def searchDirector(asId):
+    director = gatherInput("\nEnter the director: ", "", vacuouslyTrue).title()
+    connection = sqlite3.connect("MoviesCGV.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM movies WHERE m_director=?", (director, ))
+
+    for row in cursor:
+        print("------------------------------")
+        print("Title:", row[1])
+        print("Director:", row[2])
+        print("Starring:", row[3])
+        print("Critics:", row[4])
+        print("Genre:", row[5])
+        print("Year:", row[6])
+        print("------------------------------")
+    
+    connection.close()
+
+    return customerMainInterface, (id,)
+
+
+def searchGenre(asId):
+    genre = gatherInput("\nEnter the genre: ", "", vacuouslyTrue).lower()
+    connection = sqlite3.connect("MoviesCGV.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM movies WHERE m_genre=?", (genre, ))
+
+    for row in cursor:
+        print("------------------------------")
+        print("Title:", row[1])
+        print("Director:", row[2])
+        print("Starring:", row[3])
+        print("Critics:", row[4])
+        print("Genre:", row[5])
+        print("Year:", row[6])
+        print("------------------------------")
+    
+    connection.close()
+
+    return customerMainInterface, (id,)
+
+
+def searchYear(asId):
+    year = gatherInput("\nEnter the year: ", "", vacuouslyTrue)
+    connection = sqlite3.connect("MoviesCGV.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM movies WHERE m_year=?", (year, ))
+
+    for row in cursor:
+        print("------------------------------")
+        print("Title:", row[1])
+        print("Director:", row[2])
+        print("Starring:", row[3])
+        print("Critics:", row[4])
+        print("Genre:", row[5])
+        print("Year:", row[6])
+        print("------------------------------")
+    
+    connection.close()
+
+    return customerMainInterface, (id,)
 
 
 def watchedMovieInterface(asId):
