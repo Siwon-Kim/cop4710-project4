@@ -14,11 +14,8 @@ def initMovies(title, director, starring, critics, genre, year):
                     INSERT INTO movies (m_title, m_director, m_starring, m_critics, m_genre, m_year) VALUES
                         (?, ?, ?, ?, ?, ?)
                     """, (title, director, starring, critics, genre, year))
-
     newId = databaseCursor.lastrowid
-
     database.commit()
-
     return newId
 
 def uniqueMovieTitle(title):

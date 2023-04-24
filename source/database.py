@@ -29,6 +29,7 @@ database.commit()
 
 
 databaseCursor.execute('''CREATE TABLE IF NOT EXISTS watched (
+                            w_watchedId INTEGER PRIMARY KEY ASC,
                             w_u_username TEXT,
                             w_m_movieId INTEGER,
                             w_date TEXT,

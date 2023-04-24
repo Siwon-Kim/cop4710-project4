@@ -182,6 +182,7 @@ def myProfile(asId, isEmployee):
     else:
         return customerMainInterface, (asId,)
 
+
 #####################################
 ###      Movie-related States     ###
 #####################################
@@ -216,7 +217,6 @@ def addMovieInterface(asId):
     return employeeMainInterface, (asId,)
 
 
-
 def editMovieInterface(asId):
     movieId = gatherInput("\nEnter the movie ID you want to edit:\n", "", vacuouslyTrue)
     critics = gatherInput("\nEnter the critics: \n", "", vacuouslyTrue)
@@ -227,7 +227,6 @@ def editMovieInterface(asId):
     print("The critics is successfully edited\n")
 
     return employeeMainInterface, (asId,)
-
 
 
 def deleteMovieInterface(asId):
