@@ -75,7 +75,7 @@ def employeeMainInterface(asId):
 
     elif sel == 5:
         clear()
-        return myProfile, (asId,)
+        return myProfile, (asId, True)
 
     elif sel == 6:
         clear()
@@ -108,7 +108,7 @@ def customerMainInterface(asId):
 
     elif sel == 4:
         clear()
-        return myProfile, (asId,)
+        return myProfile, (asId, False)
 
     elif sel == 5:
         clear()
@@ -171,9 +171,16 @@ def newAcct():
     return customerMainInterface, (initAcct(username, password, firstname, lastname, email, 0),)
 
 
-def myProfile(asId):
-    pass
+def myProfile(asId, isEmployee):
+    user = getProfile(asId)
+    print(f"Username: {user[1]}")
+    print(f"Name: {user[3]} {user[4]}")
+    print(f"Email: {user[5]}")
 
+    if isEmployee:
+        return employeeMainInterface, (asId,)
+    else:
+        return customerMainInterface, (asId,)
 
 #####################################
 ###      Movie-related States     ###
@@ -181,22 +188,8 @@ def myProfile(asId):
 
 
 def movieListInterface(asId, isEmployee):
-    connection = sqlite3.connect("MoviesCGV.db")
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM movies;")
-
-    for row in cursor:
-        print("------------------------------")
-        print("MovieID:", row[0])
-        print("Title:", row[1])
-        print("Director:", row[2])
-        print("Starring:", row[3])
-        print("Critics:", row[4])
-        print("Genre:", row[5])
-        print("Year:", row[6])
-        print("------------------------------")
-    
-    connection.close()
+    movies = allMovieList()
+    printSearchResult(movies)
     
     if isEmployee:
         return employeeMainInterface, (asId,)
@@ -260,42 +253,25 @@ def searchMovieInterface(asId):
 
     if sel == 1:
         clear()
-        return searchTitle, (asId,)
+        return searchByTitle, (asId,)
 
     elif sel == 2:
         clear()
-        return searchDirector, (asId,)
+        return searchByDirector, (asId,)
     
     elif sel == 3:
         clear()
-        return searchGenre, (asId,)
+        return searchByGenre, (asId,)
     
     elif sel == 4:
         clear()
-        return searchYear, (asId,)
+        return searchByYear, (asId,)
 
 
-def searchTitle(asId):
+def searchByTitle(asId):
     title = gatherInput("\nEnter the title: ", "", vacuouslyTrue).lower()
-    search_result = 0
-
-    connection = sqlite3.connect("MoviesCGV.db")
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM movies WHERE m_title=?", (title, ))
-    
-    for row in cursor:
-        print("------------------------------")
-        print("MovieID:", row[0])
-        print("Title:", row[1])
-        print("Director:", row[2])
-        print("Starring:", row[3])
-        print("Critics:", row[4])
-        print("Genre:", row[5])
-        print("Year:", row[6])
-        print("------------------------------")
-        search_result += 1
-    
-    connection.close()
+    movies = searchTitle(title)
+    search_result = printSearchResult(movies)
 
     if search_result == 0:
         print("No matching movies found.")
@@ -304,56 +280,22 @@ def searchTitle(asId):
     return addWatchedMovieInterface, (asId,)
 
 
-def searchDirector(asId):
+def searchByDirector(asId):
     director = gatherInput("\nEnter the director: ", "", vacuouslyTrue).title()
-    search_result = 0
-
-    connection = sqlite3.connect("MoviesCGV.db")
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM movies WHERE m_director=?", (director, ))
-
-    for row in cursor:
-        print("------------------------------")
-        print("MovieID:", row[0])
-        print("Title:", row[1])
-        print("Director:", row[2])
-        print("Starring:", row[3])
-        print("Critics:", row[4])
-        print("Genre:", row[5])
-        print("Year:", row[6])
-        print("------------------------------")
-        search_result += 1
-    
-    connection.close()
+    movies = searchDirector(director)
+    search_result = printSearchResult(movies)
 
     if search_result == 0:
         print("No matching movies found.")
         return customerMainInterface, (asId,)
-    
+
     return addWatchedMovieInterface, (asId,)
 
 
-def searchGenre(asId):
+def searchByGenre(asId):
     genre = gatherInput("\nEnter the genre: ", "", vacuouslyTrue).lower()
-    search_result = 0
-
-    connection = sqlite3.connect("MoviesCGV.db")
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM movies WHERE m_genre=?", (genre, ))
-
-    for row in cursor:
-        print("------------------------------")
-        print("MovieID:", row[0])
-        print("Title:", row[1])
-        print("Director:", row[2])
-        print("Starring:", row[3])
-        print("Critics:", row[4])
-        print("Genre:", row[5])
-        print("Year:", row[6])
-        print("------------------------------")
-        search_result += 1
-    
-    connection.close()
+    movies = searchGenre(genre)
+    search_result = printSearchResult(movies)
 
     if search_result == 0:
         print("No matching movies found.")
@@ -362,27 +304,10 @@ def searchGenre(asId):
     return addWatchedMovieInterface, (asId,)
 
 
-def searchYear(asId):
+def searchByYear(asId):
     year = gatherInput("\nEnter the year: ", "", vacuouslyTrue)
-    search_result = 0
-
-    connection = sqlite3.connect("MoviesCGV.db")
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM movies WHERE m_year=?", (year, ))
-    
-    for row in cursor:
-        print("------------------------------")
-        print("MovieID:", row[0])
-        print("Title:", row[1])
-        print("Director:", row[2])
-        print("Starring:", row[3])
-        print("Critics:", row[4])
-        print("Genre:", row[5])
-        print("Year:", row[6])
-        print("------------------------------")
-        search_result += 1
-    
-    connection.close()
+    movies = searchYear(year)
+    search_result = printSearchResult(movies)
 
     if search_result == 0:
         print("No matching movies found.")
@@ -401,43 +326,18 @@ def addWatchedMovieInterface(asId):
 
     if sel == 1:
         clear()
-        return addWatchedMovie, (asId,)
+        addWatchedMovie(asId)
+        return customerMainInterface, (asId,)
 
     elif sel == 2:
         clear()
         return customerMainInterface, (asId,)
 
 
-def addWatchedMovie(asId):
-    movieId = gatherInput("\nEnter the movieID you want to add: ", "", vacuouslyTrue)
-    date = gatherInput("\nEnter the watched date (YYYY-MM-DD): ", "", vacuouslyTrue)
-
-    connection = sqlite3.connect("MoviesCGV.db")
-    cursor = connection.cursor()
-    cursor.execute("INSERT INTO watched (w_u_username, w_m_movieId, w_date) VALUES (?, ?, ?)", (asId, movieId, date))
-    connection.commit()
-
-    return customerMainInterface, (asId,)
-
-
 def watchedMovieInterface(asId):
-    search_result = 0
-
-    connection = sqlite3.connect("MoviesCGV.db")
-    cursor = connection.cursor()
-    cursor.execute("SELECT m.m_movieId, m.m_title, w.w_date FROM movies AS m JOIN watched AS w ON m.m_movieId = w.w_m_movieId WHERE w.w_u_username = ?", (asId, ))
-    
     print("Your watched movies list:")
-    for row in cursor:
-        print("------------------------------")
-        print("MovieID:", row[0])
-        print("Title:", row[1])
-        print("Watched Date:", row[2])
-        print("------------------------------")
-        search_result += 1
-    
-    connection.close()
-    
+    search_result = printWatchedMovie(asId)
+
     if search_result == 0:
         print("No watched movies.")
 

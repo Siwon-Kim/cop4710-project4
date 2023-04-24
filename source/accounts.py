@@ -46,3 +46,9 @@ def checkExistingUsername(username):
         return found[0]
     else:
         return -1
+
+
+def getProfile(asId):
+    databaseCursor.execute("SELECT * FROM users WHERE u_userId=?", (asId, ))
+    user = databaseCursor.fetchone()
+    return user
