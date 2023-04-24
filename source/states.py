@@ -26,9 +26,10 @@ def applicationEntry():
     prompt = "Please select an option below:\n"\
         "\t1. Log in to an existing account\n"\
         "\t2. Create a new account\n"\
+        "\t3. Exit\n"\
         "Selection: "
     sel = int(gatherInput(prompt, "Invalid input. Please try again.\n",
-                            menuValidatorBuilder('12')))
+                            menuValidatorBuilder('123')))
 
     if sel == 1:
         clear()
@@ -38,9 +39,13 @@ def applicationEntry():
         clear()
         return newAcct, None
 
+    elif sel == 3:
+        clear()
+        exit()
+
 
 def employeeMainInterface(asId):
-    prompt = "Please select an option below:\n"\
+    prompt = "\nPlease select an option below:\n"\
         "\t1. View movie list\n"\
         "\t2. Add movie to database \n"\
         "\t3. Edit movies\n"\
@@ -54,7 +59,7 @@ def employeeMainInterface(asId):
 
     if sel == 1:
         clear()
-        return movieListInterface, (asId,)
+        return movieListInterface, (asId, True)
 
     elif sel == 2:
         clear()
@@ -70,7 +75,7 @@ def employeeMainInterface(asId):
 
     elif sel == 5:
         clear()
-        return myProfile, (asId,)
+        return myProfile, (asId, True)
 
     elif sel == 6:
         clear()
@@ -78,7 +83,7 @@ def employeeMainInterface(asId):
 
 
 def customerMainInterface(asId):
-    prompt = "Please select an option below:\n"\
+    prompt = "\nPlease select an option below:\n"\
         "\t1. View all movies\n"\
         "\t2. Search movies\n"\
         "\t3. View your watched movie list\n"\
@@ -91,7 +96,7 @@ def customerMainInterface(asId):
 
     if sel == 1:
         clear()
-        return movieListInterface, (asId,)
+        return movieListInterface, (asId, False)
 
     elif sel == 2:
         clear()
@@ -103,7 +108,7 @@ def customerMainInterface(asId):
 
     elif sel == 4:
         clear()
-        return myProfile, (asId,)
+        return myProfile, (asId, False)
 
     elif sel == 5:
         clear()
@@ -124,9 +129,9 @@ def login():
         username = input("Username: ")
         password = input("Password: ")
 
-        id = checkExistingAccts(username, password)
+        id, isEmployee = checkExistingAccts(username, password)
 
-        if id != -1 and checkisEmployee:
+        if id != -1 and isEmployee:
             clear()
             print("\n\nYou have successfully logged in as an employee\n")
             return employeeMainInterface, (id,)
@@ -166,18 +171,31 @@ def newAcct():
     return customerMainInterface, (initAcct(username, password, firstname, lastname, email, 0),)
 
 
-def myProfile(asId):
-    pass
+def myProfile(asId, isEmployee):
+    user = getProfile(asId)
+    print(f"Username: {user[1]}")
+    print(f"Name: {user[3]} {user[4]}")
+    print(f"Email: {user[5]}")
 
+    if isEmployee:
+        return employeeMainInterface, (asId,)
+    else:
+        return customerMainInterface, (asId,)
 
 #####################################
 ###      Movie-related States     ###
 #####################################
 
 
-def movieListInterface(asId):
-    pass
-
+def movieListInterface(asId, isEmployee):
+    movies = allMovieList()
+    printSearchResult(movies)
+    
+    if isEmployee:
+        return employeeMainInterface, (asId,)
+    else:
+        return customerMainInterface, (asId,)
+        
 
 def addMovieInterface(asId):
     title = gatherInput(
@@ -224,11 +242,106 @@ def deleteMovieInterface(asId):
 
 
 def searchMovieInterface(asId):
-    pass
+    prompt = "\nPlease select an option below:\n"\
+        "\t1. Search by Title\n"\
+        "\t2. Search by Director\n"\
+        "\t3. Search by Genre\n"\
+        "\t4. Search by Year\n"\
+        "Selection: "
+    sel = int(gatherInput(prompt, "Invalid input. Please try again.\n",
+                            menuValidatorBuilder('1234')))
+
+    if sel == 1:
+        clear()
+        return searchByTitle, (asId,)
+
+    elif sel == 2:
+        clear()
+        return searchByDirector, (asId,)
+    
+    elif sel == 3:
+        clear()
+        return searchByGenre, (asId,)
+    
+    elif sel == 4:
+        clear()
+        return searchByYear, (asId,)
+
+
+def searchByTitle(asId):
+    title = gatherInput("\nEnter the title: ", "", vacuouslyTrue).lower()
+    movies = searchTitle(title)
+    search_result = printSearchResult(movies)
+
+    if search_result == 0:
+        print("No matching movies found.")
+        return customerMainInterface, (asId,)
+
+    return addWatchedMovieInterface, (asId,)
+
+
+def searchByDirector(asId):
+    director = gatherInput("\nEnter the director: ", "", vacuouslyTrue).title()
+    movies = searchDirector(director)
+    search_result = printSearchResult(movies)
+
+    if search_result == 0:
+        print("No matching movies found.")
+        return customerMainInterface, (asId,)
+
+    return addWatchedMovieInterface, (asId,)
+
+
+def searchByGenre(asId):
+    genre = gatherInput("\nEnter the genre: ", "", vacuouslyTrue).lower()
+    movies = searchGenre(genre)
+    search_result = printSearchResult(movies)
+
+    if search_result == 0:
+        print("No matching movies found.")
+        return customerMainInterface, (asId,)
+
+    return addWatchedMovieInterface, (asId,)
+
+
+def searchByYear(asId):
+    year = gatherInput("\nEnter the year: ", "", vacuouslyTrue)
+    movies = searchYear(year)
+    search_result = printSearchResult(movies)
+
+    if search_result == 0:
+        print("No matching movies found.")
+        return customerMainInterface, (asId,)
+
+    return addWatchedMovieInterface, (asId,)
+
+
+def addWatchedMovieInterface(asId):
+    prompt = "\nDo you want to add watched movie list?\n"\
+        "\t1. Yes\n"\
+        "\t2. No\n"\
+        "Selection: "
+    sel = int(gatherInput(prompt, "Invalid input. Please try again.\n",
+                    menuValidatorBuilder('12')))
+
+    if sel == 1:
+        clear()
+        addWatchedMovie(asId)
+        return customerMainInterface, (asId,)
+
+    elif sel == 2:
+        clear()
+        return customerMainInterface, (asId,)
 
 
 def watchedMovieInterface(asId):
-    pass
+    print("Your watched movies list:")
+    search_result = printWatchedMovie(asId)
+
+    if search_result == 0:
+        print("No watched movies.")
+
+    return customerMainInterface, (asId,)
 
 
 #####################################

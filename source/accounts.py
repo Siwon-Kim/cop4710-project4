@@ -33,20 +33,9 @@ def checkExistingAccts(username, password):
                             (username, password))
     found = databaseCursor.fetchone()
     if found:
-        return found[0]
+        return found[0], found[6]
     else:
-        return -1
-
-
-def checkisEmployee(username, password):
-    databaseCursor.execute("SELECT * FROM users WHERE u_username= ? and u_password= ?",
-                            (username, password))
-    found = databaseCursor.fetchone()
-    print(found)
-    if found:
-        return found[0]
-    else:
-        return -1
+        return -1, -1
 
 
 def checkExistingUsername(username):
@@ -57,3 +46,9 @@ def checkExistingUsername(username):
         return found[0]
     else:
         return -1
+
+
+def getProfile(asId):
+    databaseCursor.execute("SELECT * FROM users WHERE u_userId=?", (asId, ))
+    user = databaseCursor.fetchone()
+    return user
